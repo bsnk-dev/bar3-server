@@ -1,0 +1,6 @@
+#Node Stuff
+node_modules
+
+#Built files
+build
+packed

@@ -1,0 +1,28 @@
+{
+  "name": "bar3-server",
+  "version": "1.0.0",
+  "description": "The local server for Bar 3",
+  "main": "./build/src/index.js",
+  "scripts": {
+    "build": "tsc && shx cp -r ./public ./build/public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bsnk-dev",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "superagent": "^6.1.0",
+    "typescript": "^4.1.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.9",
+    "@types/express": "^4.17.11",
+    "@types/superagent": "^4.1.10",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "eslint": "^7.17.0",
+    "eslint-config-google": "^0.14.0",
+    "shx": "^0.3.3"
+  }
+}

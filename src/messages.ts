@@ -80,7 +80,10 @@ class Messages {
    * Clears the internal queue of nations
    */
   public clearQueue() {
-
+    let nation;
+    for (nation of this.queuedNations) {
+      this.sendMessage(nation);
+    }
   }
 
   /**

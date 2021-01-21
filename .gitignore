@@ -4,3 +4,7 @@ node_modules
 #Built files
 build
 packed
+
+#Runtime files
+config.json
+state.json

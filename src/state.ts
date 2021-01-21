@@ -1,4 +1,5 @@
 import {Config, NationAPICall} from './types';
+import {readFileSync, writeFileSync} from 'fs';
 
 /**
  * Handles the configuration store
@@ -7,8 +8,17 @@ class StateHandler {
   public config = new Config();
   public requestsMax = 0;
   public requestsUsed = 0;
-  public isApplicationOn = true;
+  public isApplicationOn = false;
   public nationIDCache: number[] = [];
+  public isSetup = false;
+
+  /**
+   * Loads the config
+   */
+  constructor() {
+    this.loadConfig();
+    this.loadApplicationState();
+  }
 
   /**
    * Updates the configuration
@@ -16,7 +26,50 @@ class StateHandler {
    */
   writeConfig(config: Config) {
     this.config = config;
-    // write file
+    try {
+      writeFileSync('./config.json', JSON.stringify(this.config));
+    } catch {
+      console.error('Can\'t write config!');
+    }
+  }
+
+  /**
+   * Writes parts of the current state to a file
+   */
+  writeApplicationState() {
+    try {
+      writeFileSync('./state.json', JSON.stringify({
+        isApplicationOn: this.isApplicationOn,
+      }));
+    } catch {
+      console.error('Can\'t write state!');
+    }
+  }
+
+  /**
+   * Load application state
+   */
+  loadApplicationState() {
+    try {
+      const rawConfig = readFileSync('./state.json').toString();
+      this.isApplicationOn = JSON.parse(rawConfig).isApplicationOn;
+    } catch {
+      console.error('Can\'t load state!');
+    }
+  }
+
+  /**
+   * Loads the config from the JSON file.
+   */
+  private loadConfig() {
+    try {
+      const rawConfig = readFileSync('./config.json').toString();
+      this.config = JSON.parse(rawConfig);
+      this.isSetup = true;
+    } catch {
+      console.error('Can\'t load raw config!');
+      this.isSetup = false;
+    }
   }
 
   /**
@@ -35,6 +88,8 @@ class StateHandler {
    */
   setApplicationOn(isOn: boolean) {
     this.isApplicationOn = isOn;
+    this.writeApplicationState();
+    console.log(`Set application state to ${isOn ? 'on' : 'off'}`);
   }
 
   /**

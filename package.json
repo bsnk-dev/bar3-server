@@ -4,6 +4,7 @@
   "description": "The local server for Bar 3",
   "main": "./build/src/index.js",
   "scripts": {
+    "start": "node ./build/src/index.js",
     "build": "tsc && shx cp -r ./public ./build/public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,6 +13,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "open": "^7.3.1",
     "superagent": "^6.1.0",
     "typescript": "^4.1.3"
   },

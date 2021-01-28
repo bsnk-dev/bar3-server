@@ -1,4 +1,4 @@
-import {Message, NationAPICall} from './types';
+import {Message, NationAPICall} from '../interfaces/types';
 import configHandler from './state';
 import SuperAgent from 'superagent';
 

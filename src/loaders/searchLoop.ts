@@ -1,7 +1,7 @@
-import state from './state';
+import state from '../services/state';
 import superagent, {Response} from 'superagent';
-import {NationAPICall} from './types';
-import messages from './messages';
+import {NationAPICall} from '../interfaces/types';
+import messages from '../services/messages';
 
 /**
  * Finds nations to send the messages to

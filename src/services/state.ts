@@ -1,4 +1,4 @@
-import {Config, NationAPICall} from './types';
+import {Config, NationAPICall} from '../interfaces/types';
 import {readFileSync, writeFileSync} from 'fs';
 
 /**

@@ -14,7 +14,10 @@ app.get('/api/config', async function(req: express.Request, res: express.Respons
 });
 
 app.post('/api/setConfig', async function(req: express.Request, res: express.Response) {
-  state.writeConfig(req.body.config);
+  state.writeConfig(
+      Object.assign(Object.assign({}, state.config),
+          req.body.config),
+  );
   res.status(204).end();
 });
 

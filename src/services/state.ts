@@ -27,7 +27,7 @@ class StateHandler {
   writeConfig(config: Config) {
     this.config = config;
     try {
-      writeFileSync('./config.json', JSON.stringify(this.config));
+      writeFileSync('./config.json', JSON.stringify(config));
       this.isSetup = true;
     } catch {
       console.error('Can\'t write config!');

@@ -3,6 +3,10 @@ export interface Config {
   apiKey: string;
   messageSubject: string;
   messageHTML: string;
+  advancedRaw: {
+    html: string;
+    css: string
+  };
   updatePeriodMilliseconds: number;
   queueTime: number;
   configVersion: string;
@@ -12,6 +16,10 @@ export class Config implements Config {
   apiKey = '';
   messageSubject = '';
   messageHTML = '';
+  advancedRaw = {
+    html: '',
+    css: '',
+  };
   updatePeriodMilliseconds = 180000;
   queueTime = 300000;
   configVersion = 'v1.0'; 

@@ -1,7 +1,7 @@
 import {Message, NationAPICall} from '../interfaces/types';
 import configHandler from './state';
 import SuperAgent from 'superagent';
-
+import dLog from '../utilities/debugLog';
 
 /**
  * Sends, stores, and queues messages.
@@ -19,13 +19,20 @@ class Messages {
   public async sendMessage(nation: NationAPICall.Nation) {
     const config = configHandler.config;
 
+    dLog(`sending message to ${nation.nation}`);
+
     const messageHTML = this.customizeMessage(config.messageHTML, nation);
     const subject = this.customizeMessage(config.messageSubject, nation);
+
+    dLog('Customizing message', `Old: ${config.messageHTML}`, `New: ${messageHTML}`);
+    dLog('Customizing subject', `Old: ${config.messageSubject}`, `New: ${subject}`);
 
     const thisMessage = new Message();
 
     thisMessage.nation = nation;
     this.addMessageToSentMessages(thisMessage);
+
+    dLog('Added message to sent messages');
 
     let error = '';
 
@@ -44,6 +51,8 @@ class Messages {
           error = e;
         });
 
+    dLog('Sent message with API');
+
     thisMessage.sentTimeMilliseconds = Date.now();
 
     if (!res) {
@@ -55,12 +64,16 @@ class Messages {
     const resJson = res.body;
 
     if (!resJson.success) {
+      dLog('API returns the message was not sent successfully.');
       thisMessage.successful = false;
       thisMessage.error = resJson.general_message;
       return thisMessage;
     }
 
     thisMessage.successful = true;
+
+    console.log(`Sent message to ${nation.nation}.`);
+
     return thisMessage;
   }
 
@@ -71,15 +84,19 @@ class Messages {
   private addMessageToSentMessages(message: Message) {
     if (this.sentMessages.length >= this.maxSentMesssagesToStore) {
       this.sentMessages.splice(0, 1);
+      dLog('Trimmed sent messages.');
     }
 
     this.sentMessages.push(message);
+    dLog(`Pushed message ${message.nation.nation} to sent messages cache.`);
   }
 
   /**
    * Clears the internal queue of nations
    */
   public clearQueue() {
+    dLog('Clearing the queue.');
+
     let nation;
     for (nation of this.queuedNations) {
       this.sendMessage(nation);
@@ -92,6 +109,7 @@ class Messages {
    */
   public addNationToQueue(nation: NationAPICall.Nation) {
     this.queuedNations.push(nation);
+    console.log(`Added ${nation.nation} to queue.`);
   }
 
   /**

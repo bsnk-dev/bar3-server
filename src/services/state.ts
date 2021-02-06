@@ -11,6 +11,7 @@ class StateHandler {
   public isApplicationOn = false;
   public nationIDCache: number[] = [];
   public isSetup = false;
+  public debug = false;
 
   /**
    * Loads the config
@@ -104,6 +105,14 @@ class StateHandler {
     for (nation of nations) {
       this.nationIDCache.push(nation.nation_id);
     }
+  }
+
+  /**
+   * Sets debug mode on or off
+   * @param {boolean} debugModeOn Whether or not to turn debug mode on
+   */
+  setDebugMode(debugModeOn: boolean) {
+    this.debug = debugModeOn;
   }
 }
 

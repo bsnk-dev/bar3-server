@@ -16,6 +16,8 @@ app.get('/api/config', async function(req: express.Request, res: express.Respons
 app.post('/api/setConfig', async function(req: express.Request, res: express.Response) {
   const mergedConfig = Object.assign(state.config, req.body.config);
 
+  console.log('Updated config with new values: '+JSON.stringify(req.body.config));
+
   state.writeConfig(mergedConfig);
   res.status(204).end();
 });

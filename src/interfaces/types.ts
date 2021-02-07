@@ -35,7 +35,6 @@ export interface Message {
 export class Message implements Message {
   sentTimeMilliseconds = 0;
   successful = false;
-  error? = 'default';
 }
 
 export declare module NationAPICall {
@@ -96,4 +95,9 @@ export declare module NationAPICall {
       missiles: number;
       nukes: number;
   }
+}
+
+export interface QueuedNation {
+  nation: NationAPICall.Nation;
+  timeQueued: number;
 }

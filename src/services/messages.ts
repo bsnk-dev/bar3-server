@@ -1,4 +1,4 @@
-import {Message, NationAPICall} from '../interfaces/types';
+import {Message, NationAPICall, QueuedNation} from '../interfaces/types';
 import configHandler from './state';
 import SuperAgent from 'superagent';
 import dLog from '../utilities/debugLog';
@@ -10,7 +10,7 @@ class Messages {
   public sentMessages: Message[] = [];
   private readonly maxSentMesssagesToStore = 250;
 
-  private queuedNations: NationAPICall.Nation[] = [];
+  private queuedNations: QueuedNation[] = [];
 
   /**
    * Sends a message to a nation using your current config
@@ -39,6 +39,7 @@ class Messages {
     const res = await SuperAgent.post('https://politicsandwar.com/api/send-message')
         .set('Content-Type', 'xxx-application/x-www-form-urlencoded')
         .accept('json')
+        .type('form')
         .send({
           key: config.apiKey,
           to: nation.nation_id,
@@ -97,9 +98,11 @@ class Messages {
   public clearQueue() {
     dLog('Clearing the queue.');
 
-    let nation;
-    for (nation of this.queuedNations) {
-      this.sendMessage(nation);
+    let queuedNation;
+    for (queuedNation of this.queuedNations) {
+      if (queuedNation.timeQueued + configHandler.config.queueTime < Date.now()) {
+        this.sendMessage(queuedNation.nation);
+      }
     }
   }
 
@@ -108,7 +111,7 @@ class Messages {
    * @param {NationAPICall.Nation} nation The sent message object
    */
   public addNationToQueue(nation: NationAPICall.Nation) {
-    this.queuedNations.push(nation);
+    this.queuedNations.push({nation: nation, timeQueued: Date.now()});
     console.log(`Added ${nation.nation} to queue.`);
   }
 

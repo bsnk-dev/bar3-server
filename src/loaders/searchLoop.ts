@@ -4,6 +4,9 @@ import {NationAPICall} from '../interfaces/types';
 import messages from '../services/messages';
 import dLog from '../utilities/debugLog';
 
+// FIXME
+// let test = false;
+
 /**
  * Finds nations to send the messages to
  * It is a timeout because the update time could change
@@ -47,6 +50,38 @@ function nationSearchTimeout() {
       state.updateNationIDCache(apiCall.data);
       return;
     }
+
+    // FIXME
+    /* if (!test) {
+      messages.addNationToQueue({
+        'nation_id': 115888,
+        'nation': 'M1A1 Abrams',
+        'leader': 'William McKinley',
+        'continent': 1,
+        'war_policy': 6,
+        'domestic_policy': 4,
+        'color': 8,
+        'alliance_id': 5722,
+        'alliance': 'The Ampersand',
+        'alliance_position': 2,
+        'cities': 3,
+        'offensive_wars': 6,
+        'defensive_wars': 0,
+        'score': 675.37,
+        'v_mode': false,
+        'v_mode_turns': 0,
+        'beige_turns': 0,
+        'last_active': '2021-02-07 01:01:02',
+        'founded': '2019-01-23 23:24:35',
+        'soldiers': 32804,
+        'tanks': 2490,
+        'aircraft': 150,
+        'ships': 20,
+        'missiles': 0,
+        'nukes': 0,
+      });
+      test = true;
+    }*/
 
     let nation;
     for (nation of apiCall.data) {

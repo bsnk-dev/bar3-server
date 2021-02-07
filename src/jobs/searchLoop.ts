@@ -11,7 +11,7 @@ import dLog from '../utilities/debugLog';
  * Finds nations to send the messages to
  * It is a timeout because the update time could change
  */
-function nationSearchTimeout() {
+export default function nationSearchTimeout(): void {
   dLog(`Waiting for next loop with ${state.config.updatePeriodMilliseconds}ms delay.`);
 
   setTimeout(async () => {
@@ -90,27 +90,3 @@ function nationSearchTimeout() {
     }
   }, state.config.updatePeriodMilliseconds);
 }
-
-
-/**
- * Sends the messages that have been queued
- * It is a timeout because the queue time could change
- */
-function clearNationTimeout() {
-  setTimeout(() => {
-    clearNationTimeout();
-    if (!state.isApplicationOn) return;
-
-    messages.clearQueue();
-  }, state.config.queueTime);
-}
-
-/**
- * Starts the clearing of the queue
- */
-clearNationTimeout();
-
-/**
- * Starts the nation searching loop
- */
-nationSearchTimeout();

@@ -1,8 +1,11 @@
 import {Config, NationAPICall} from '../interfaces/types';
 import {readFileSync, writeFileSync} from 'fs';
+import {join} from 'path';
+
+const cwd = process.cwd();
 
 /**
- * Handles the configuration store
+ * Handles the state across Bar 3
  */
 class StateHandler {
   public config = new Config();
@@ -28,7 +31,7 @@ class StateHandler {
   writeConfig(config: Config) {
     this.config = config;
     try {
-      writeFileSync('./config.json', JSON.stringify(config));
+      writeFileSync(join(cwd, './config.json'), JSON.stringify(config));
       this.isSetup = true;
     } catch {
       console.error('Can\'t write config!');
@@ -40,7 +43,7 @@ class StateHandler {
    */
   writeApplicationState() {
     try {
-      writeFileSync('./state.json', JSON.stringify({
+      writeFileSync(join(cwd, './state.json'), JSON.stringify({
         isApplicationOn: this.isApplicationOn,
       }));
     } catch {
@@ -53,7 +56,7 @@ class StateHandler {
    */
   loadApplicationState() {
     try {
-      const rawConfig = readFileSync('./state.json').toString();
+      const rawConfig = readFileSync(join(cwd, './state.json')).toString();
       this.isApplicationOn = JSON.parse(rawConfig).isApplicationOn;
     } catch {
       console.error('Can\'t load state!');
@@ -65,7 +68,7 @@ class StateHandler {
    */
   private loadConfig() {
     try {
-      const rawConfig = readFileSync('./config.json').toString();
+      const rawConfig = readFileSync(join(cwd, './config.json')).toString();
       this.config = JSON.parse(rawConfig);
       this.isSetup = true;
     } catch {

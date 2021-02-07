@@ -17,5 +17,6 @@ module.exports = {
   ],
   'rules': {
     'max-len': 'off',
+    'camelcase': 'off', // Because of the P&W API
   },
 };

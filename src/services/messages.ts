@@ -16,7 +16,7 @@ class Messages {
    * Sends a message to a nation using your current config
    * @param {NationAPICall.Nation} nation The nation that you want to send the message to
    */
-  public async sendMessage(nation: NationAPICall.Nation) {
+  public async sendMessage(nation: NationAPICall.Nation | { nation_id: number; nation: string; leader: string; }) {
     const config = configHandler.config;
 
     dLog(`sending message to ${nation.nation}`);
@@ -121,7 +121,7 @@ class Messages {
    * @param {NationAPICall.Nation} nation The nation
    * @return {string} returns the customized message
    */
-  private customizeMessage(text: string, nation: NationAPICall.Nation) {
+  private customizeMessage(text: string, nation: NationAPICall.Nation | { nation_id: number; nation: string; leader: string; }) {
     let customizedMessage = text;
     customizedMessage = customizedMessage.replace(/\\\(nation\)/g, nation.nation);
     customizedMessage = customizedMessage.replace(/\\\(leader\)/g, nation.leader);

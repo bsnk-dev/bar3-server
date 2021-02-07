@@ -27,7 +27,7 @@ export class Config implements Config {
 
 export interface Message {
   sentTimeMilliseconds: number;
-  nation: NationAPICall.Nation;
+  nation: NationAPICall.Nation | { nation_id: number; nation: string; leader: string; };
   successful: boolean;
   error?: string;
 }

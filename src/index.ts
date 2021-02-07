@@ -1,4 +1,4 @@
-import './loaders/searchLoop';
+import './loaders/loops';
 import './loaders/arguments';
 import './services/openApp';
 import './api';

@@ -3,7 +3,9 @@ node_modules
 
 #Built files
 build
-packed
+
+#Binaries to be distributed
+dist
 
 #Runtime files
 config.json

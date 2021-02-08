@@ -9,6 +9,7 @@ export interface Config {
   };
   updatePeriodMilliseconds: number;
   queueTime: number;
+  currentEditor: number;
   configVersion: string;
 }
 
@@ -22,6 +23,7 @@ export class Config implements Config {
   };
   updatePeriodMilliseconds = 180000;
   queueTime = 300000;
+  currentEditor = 0;
   configVersion = 'v1.0'; 
 }
 

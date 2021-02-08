@@ -1,6 +1,8 @@
 import {promises} from 'dns';
 import {hostname} from 'os';
 import open from 'open';
+import state from './state';
+import debugLog from '../utilities/debugLog';
 
 /**
  * Gets the local IP address of a computer
@@ -28,5 +30,8 @@ async function logAddresses() {
 // log to the user where to access the website and open it locally
 logAddresses();
 
-// TODO: uncomment when web app is done
-if (false) open('http://localhost:8055');
+if (!state.debug) {
+  open('http://localhost:8055');
+} else {
+  debugLog('Skipping auto-open. Disable debug logs to enable it.');
+}

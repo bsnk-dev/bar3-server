@@ -21,7 +21,12 @@ export default function nationSearchTimeout(): void {
     dLog(`Bar 3 is currently ${state.isApplicationOn ? 'on' : 'off'}`);
     if (!state.isApplicationOn) return;
 
-    const nationsRequest: Response | void = await superagent.get(`https://politicsandwar.com/api/v2/nations/${state.config.apiKey}/&max_score=50&alliance_position=0`)
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+
+    const nationsRequest: Response | void = await superagent.get(`https://politicsandwar.com/api/v2/nations/${state.config.apiKey}/&max_score=50&alliance_position=0&date_created=${year}${month}${day}`)
         .accept('json')
         .then()
         .catch((e) => {

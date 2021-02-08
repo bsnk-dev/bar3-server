@@ -14,6 +14,7 @@ app.use(express.static(join(__dirname, '../../..', 'public')));
 
 app.get('/api/config', async function(req: express.Request, res: express.Response) {
   res.send(JSON.stringify(state.config)).status(200).end();
+  dLog('Sending config.');
 });
 
 app.post('/api/setConfig', async function(req: express.Request, res: express.Response) {
@@ -60,6 +61,8 @@ app.get('/api/appData', async function(req: express.Request, res: express.Respon
       max: state.requestsMax,
     },
   })).status(200).end();
+
+  dLog('Sending application data for dashboard');
 });
 
 // Catch the 404s for the single page structure

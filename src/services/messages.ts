@@ -101,9 +101,11 @@ class Messages {
     let queuedNation;
     for (queuedNation of this.queuedNations) {
       if (queuedNation.timeQueued + configHandler.config.queueTime < Date.now()) {
-        this.sendMessage(queuedNation.nation);
+        this.sendMessage(Object.assign({}, queuedNation.nation));
       }
     }
+
+    this.queuedNations = [];
   }
 
   /**

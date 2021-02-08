@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "The local server for Bar 3",
   "main": "./build/src/index.js",
+  "bin": "./build/src/index.js",
   "scripts": {
     "start": "node ./build/src/index.js",
     "verbose": "node ./build/src/index.js --debug",
     "prebuild": "shx rm -rf ./build/*",
-    "build": "tsc && shx cp -r ./public ./build/public",
-    "pack": "npm run build && pkg ./build/src/index.js --target node12-win-x86,node12-linux",
-    "postpack": "shx mkdir -p dist && shx mv index-win-x86.exe dist/bar3-win.exe && shx mv index-linux-x64 dist/bar3-linux",
+    "build": "tsc",
+    "pack": "npm run build && pkg . --target node12-win-x86,node12-linux",
+    "postpack": "shx mkdir -p dist && shx mv bar3-server-* dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "bsnk-dev",
@@ -36,6 +37,6 @@
     "shx": "^0.3.3"
   },
   "pkg": {
-    "assets": "./build/public/*"
+    "assets": "./public/**/*"
   }
 }

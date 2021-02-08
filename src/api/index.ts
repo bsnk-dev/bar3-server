@@ -3,12 +3,14 @@ import cors from 'cors';
 import state from '../services/state';
 import messages from '../services/messages';
 import dLog from '../utilities/debugLog';
+import {join} from 'path';
 
 const port = 8055;
 const app = express();
 
 app.use(cors());
 app.use(express.json({limit: '2mb'}));
+app.use(express.static(join(__dirname, '../../..', 'public')));
 
 app.get('/api/config', async function(req: express.Request, res: express.Response) {
   res.send(JSON.stringify(state.config)).status(200).end();
@@ -58,6 +60,11 @@ app.get('/api/appData', async function(req: express.Request, res: express.Respon
       max: state.requestsMax,
     },
   })).status(200).end();
+});
+
+// Catch the 404s for the single page structure
+app.get('*', async function(req: express.Request, res: express.Response) {
+  res.sendFile(join(__dirname, '../../..', 'public/index.html'));
 });
 
 app.listen(port);

@@ -22,9 +22,18 @@ export default function nationSearchTimeout(): void {
     if (!state.isApplicationOn) return;
 
     const now = new Date();
+
     const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
+
+    let month: number | string = now.getMonth();
+    if (month < 10) {
+      month = '0'+month.toString();
+    }
+
+    let day: number | string = now.getDate();
+    if (day < 10) {
+      day = '0'+day.toString();
+    }
 
     const nationsRequest: Response | void = await superagent.get(`https://politicsandwar.com/api/v2/nations/${state.config.apiKey}/&max_score=50&alliance_position=0&date_created=${year}${month}${day}`)
         .accept('json')
@@ -37,6 +46,10 @@ export default function nationSearchTimeout(): void {
     const apiCall: NationAPICall.RootObject = nationsRequest.body;
 
     if (!apiCall.api_request.success) {
+      if (apiCall.api_request.error_msg == 'No results to display.') {
+        dLog('No new nations created today.');
+        return;
+      }
       console.error('Can\'t get nations! Check your config.');
       dLog('API returned unsuccessful whilst getting nations.');
       return;

@@ -30,8 +30,8 @@ async function logAddresses() {
 // log to the user where to access the website and open it locally
 logAddresses();
 
-if (!state.debug) {
+if (!state.debug && !state.headless) {
   open('http://localhost:8055');
 } else {
-  debugLog('Skipping auto-open. Disable debug logs to enable it.');
+  debugLog('Skipping auto-open. Don\'t use --debug or --headless to enable it.');
 }

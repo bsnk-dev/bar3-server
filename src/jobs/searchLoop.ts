@@ -103,7 +103,7 @@ export default function nationSearchTimeout(): void {
 
     let nation;
     for (nation of apiCall.data) {
-      if (state.nationIDCache.includes(nation.nation_id)) return;
+      if (state.nationIDCache.includes(nation.nation_id)) continue;
       messages.addNationToQueue(nation);
     }
 

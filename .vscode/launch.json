@@ -12,6 +12,7 @@
         "<node_internals>/**",
         "node_modules"
       ],
+      "args": ["--debug"],
       "program": "${workspaceFolder}\\build\\src\\index.js",
       "outFiles": [
         "${workspaceFolder}\\build\\src\\**\\*.js"

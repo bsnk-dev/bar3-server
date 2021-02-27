@@ -15,6 +15,7 @@ class StateHandler {
   public nationIDCache: number[] = [];
   public isSetup = false;
   public debug = false;
+  public headless = false;
 
   /**
    * Loads the config
@@ -116,6 +117,14 @@ class StateHandler {
    */
   setDebugMode(debugModeOn: boolean) {
     this.debug = debugModeOn;
+  }
+
+  /**
+   * Sets headless mode on or off
+   * @param {boolean} headlessModeOn The new value of headless mode with true being on
+   */
+  setHeadlessMode(headlessModeOn: boolean) {
+    this.headless = headlessModeOn;
   }
 }
 

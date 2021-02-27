@@ -98,14 +98,23 @@ class Messages {
   public clearQueue() {
     dLog('Clearing the queue.');
 
-    let queuedNation;
-    for (queuedNation of this.queuedNations) {
-      if (queuedNation.timeQueued + configHandler.config.queueTime < Date.now()) {
-        this.sendMessage(Object.assign({}, queuedNation.nation));
+    const usedNationIndexes: number[] = [];
+
+    for (let i = 0; i < this.queuedNations.length; i++) {
+      if (this.queuedNations[i].timeQueued + configHandler.config.queueTime < Date.now()) {
+        this.sendMessage(Object.assign({}, this.queuedNations[i].nation));
+        usedNationIndexes.push(i);
       }
     }
 
-    this.queuedNations = [];
+    const newQueuedNationArray: QueuedNation[] = [];
+
+    for (let i = 0; i < this.queuedNations.length; i++) {
+      if (usedNationIndexes.includes(i)) continue;
+      newQueuedNationArray.push(this.queuedNations[i]);
+    }
+
+    this.queuedNations = newQueuedNationArray;
   }
 
   /**

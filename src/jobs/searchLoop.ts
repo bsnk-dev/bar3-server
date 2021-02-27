@@ -25,7 +25,7 @@ export default function nationSearchTimeout(): void {
 
     const year = now.getFullYear();
 
-    let month: number | string = now.getMonth();
+    let month: number | string = now.getMonth() + 1;
     if (month < 10) {
       month = '0'+month.toString();
     }

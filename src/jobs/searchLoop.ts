@@ -106,5 +106,7 @@ export default function nationSearchTimeout(): void {
       if (state.nationIDCache.includes(nation.nation_id)) return;
       messages.addNationToQueue(nation);
     }
+
+    state.updateNationIDCache(apiCall.data);
   }, state.config.updatePeriodMilliseconds);
 }

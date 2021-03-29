@@ -2,6 +2,9 @@ import {Config, NationAPICall} from '../interfaces/types';
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 
+const packageRaw = readFileSync('./package.json');
+const packageJson = JSON.parse(packageRaw.toString());
+
 const cwd = process.cwd();
 
 /**
@@ -16,6 +19,8 @@ class StateHandler {
   public isSetup = false;
   public debug = false;
   public headless = false;
+  public port = 8055;
+  public serverVersion = packageJson.version;
 
   /**
    * Loads the config
@@ -125,6 +130,14 @@ class StateHandler {
    */
   setHeadlessMode(headlessModeOn: boolean) {
     this.headless = headlessModeOn;
+  }
+
+  /**
+   * Sets the port that the UI is accessed on
+   * @param {number} port The port as a number
+   */
+  setPort(port: number) {
+    this.port = port;
   }
 }
 

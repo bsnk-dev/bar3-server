@@ -21,7 +21,10 @@ export default function nationSearchTimeout(): void {
     dLog(`Bar 3 is currently ${state.isApplicationOn ? 'on' : 'off'}`);
     if (!state.isApplicationOn) return;
 
+    // Get the current date and adjust to match GMT timezone
     const now = new Date();
+    const minutesOffset = now.getTimezoneOffset();
+    now.setTime(now.getTime() + (minutesOffset * 60 * 1000));
 
     const year = now.getFullYear();
 

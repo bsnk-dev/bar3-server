@@ -12,6 +12,11 @@ const argv = yargs(process.argv)
       alias: 'h',
       type: 'boolean',
       description: 'skip opening web browser',
+    })
+    .option('port', {
+      alias: 'p',
+      type: 'number',
+      description: 'Change the port to access the ui',
     }).argv;
 
 if (argv.debug) {
@@ -22,4 +27,9 @@ if (argv.debug) {
 if (argv.headless) {
   state.setHeadlessMode(true);
   console.log('Headless mode enabled');
+}
+
+if (argv.port) {
+  state.setPort(argv.port);
+  console.log('Port overrided to '+argv.port);
 }

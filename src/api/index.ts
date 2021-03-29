@@ -5,7 +5,6 @@ import messages from '../services/messages';
 import dLog from '../utilities/debugLog';
 import {join} from 'path';
 
-const port = 8055;
 const app = express();
 
 app.use(cors());
@@ -60,6 +59,7 @@ app.get('/api/appData', async function(req: express.Request, res: express.Respon
       used: state.requestsUsed,
       max: state.requestsMax,
     },
+    serverVersion: state.serverVersion,
   })).status(200).end();
 
   dLog('Sending application data for dashboard');
@@ -70,4 +70,4 @@ app.get('*', async function(req: express.Request, res: express.Response) {
   res.sendFile(join(__dirname, '../../..', 'public/index.html'));
 });
 
-app.listen(port);
+app.listen(state.port);

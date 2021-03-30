@@ -37,6 +37,9 @@
     "shx": "^0.3.3"
   },
   "pkg": {
-    "assets": "./public/**/*"
+    "assets": [
+      "./public/**/*",
+      "./package.json"
+    ]
   }
 }

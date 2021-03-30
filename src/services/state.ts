@@ -2,7 +2,7 @@ import {Config, NationAPICall} from '../interfaces/types';
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 
-const packageRaw = readFileSync('./package.json');
+const packageRaw = readFileSync(join(__dirname, '../../..', './package.json'));
 const packageJson = JSON.parse(packageRaw.toString());
 
 const cwd = process.cwd();

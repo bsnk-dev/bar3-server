@@ -5,8 +5,6 @@ import {join} from 'path';
 const packageRaw = readFileSync(join(__dirname, '../../..', './package.json'));
 const packageJson = JSON.parse(packageRaw.toString());
 
-const cwd = process.cwd();
-
 /**
  * Handles the state across Bar 3
  */
@@ -20,6 +18,7 @@ class StateHandler {
   public debug = false;
   public headless = false;
   public port = 8055;
+  public workingDir = process.cwd();
   public serverVersion = packageJson.version;
 
   /**
@@ -37,7 +36,7 @@ class StateHandler {
   writeConfig(config: Config) {
     this.config = config;
     try {
-      writeFileSync(join(cwd, './config.json'), JSON.stringify(config));
+      writeFileSync(join(this.workingDir, './config.json'), JSON.stringify(config));
       this.isSetup = true;
     } catch {
       console.error('Can\'t write config!');
@@ -49,7 +48,7 @@ class StateHandler {
    */
   writeApplicationState() {
     try {
-      writeFileSync(join(cwd, './state.json'), JSON.stringify({
+      writeFileSync(join(this.workingDir, './state.json'), JSON.stringify({
         isApplicationOn: this.isApplicationOn,
       }));
     } catch {
@@ -62,7 +61,7 @@ class StateHandler {
    */
   loadApplicationState() {
     try {
-      const rawConfig = readFileSync(join(cwd, './state.json')).toString();
+      const rawConfig = readFileSync(join(this.workingDir, './state.json')).toString();
       this.isApplicationOn = JSON.parse(rawConfig).isApplicationOn;
     } catch {
       console.error('Can\'t load state!');
@@ -74,7 +73,7 @@ class StateHandler {
    */
   private loadConfig() {
     try {
-      const rawConfig = readFileSync(join(cwd, './config.json')).toString();
+      const rawConfig = readFileSync(join(this.workingDir, './config.json')).toString();
       this.config = JSON.parse(rawConfig);
       this.isSetup = true;
     } catch {
@@ -138,6 +137,20 @@ class StateHandler {
    */
   setPort(port: number) {
     this.port = port;
+  }
+
+  /**
+   * Sets the working directory and reloads state and config
+   * @param {string} dir The working directory to change to
+   */
+  setWorkingDir(dir: string) {
+    // Change directory
+    process.chdir(dir);
+    this.workingDir = process.cwd();
+
+    // Reload config
+    this.loadConfig();
+    this.loadApplicationState();
   }
 }
 

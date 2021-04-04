@@ -17,7 +17,17 @@ const argv = yargs(process.argv)
       alias: 'p',
       type: 'number',
       description: 'Change the port to access the ui',
+    })
+    .option('workingdir', {
+      alias: 'w',
+      type: 'string',
+      description: 'Change the working directory where config and state is stored',
     }).argv;
+
+if (argv.workingdir) {
+  state.setWorkingDir(argv.workingdir);
+  console.log('Config dir overrided to: '+state.workingDir);
+}
 
 if (argv.debug) {
   state.setDebugMode(true);

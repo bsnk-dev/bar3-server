@@ -1,6 +1,6 @@
 import {Config, NationAPICall} from '../interfaces/types';
-import {readFileSync, writeFileSync} from 'fs';
-import {join} from 'path';
+import {readFileSync, writeFileSync, statSync} from 'fs';
+import {join, resolve} from 'path';
 
 const packageRaw = readFileSync(join(__dirname, '../../..', './package.json'));
 const packageJson = JSON.parse(packageRaw.toString());
@@ -22,9 +22,9 @@ class StateHandler {
   public serverVersion = packageJson.version;
 
   /**
-   * Loads the config
+   * Loads the config and state (to be called during initial startup)
    */
-  constructor() {
+  initState() {
     this.loadConfig();
     this.loadApplicationState();
   }
@@ -140,17 +140,19 @@ class StateHandler {
   }
 
   /**
-   * Sets the working directory and reloads state and config
-   * @param {string} dir The working directory to change to
+   * Sets the working directory
+   * @param {string} dir The working directory to change to (supports relative paths)
+   * @throws Error will be thrown if path doesn't exist or is not a directory
    */
   setWorkingDir(dir: string) {
-    // Change directory
-    process.chdir(dir);
-    this.workingDir = process.cwd();
+    let newWorkingDir = resolve(process.cwd(), dir);
 
-    // Reload config
-    this.loadConfig();
-    this.loadApplicationState();
+    // statSync throws error if invalid path; we throw error if path is not a directory
+    if (statSync(newWorkingDir).isDirectory()) {
+      this.workingDir = newWorkingDir;
+    } else {
+      throw new Error('Not a directory');
+    }
   }
 }
 

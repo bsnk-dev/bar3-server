@@ -1,6 +1,7 @@
 import state from '../services/state';
 import dLog from '../utilities/debugLog';
 import yargs from 'yargs/yargs';
+import chalk from 'chalk';
 
 const argv = yargs(process.argv)
     .option('debug', {
@@ -25,8 +26,12 @@ const argv = yargs(process.argv)
     }).argv;
 
 if (argv.workingdir) {
-  state.setWorkingDir(argv.workingdir);
-  console.log('Config dir overrided to: '+state.workingDir);
+  try {
+    state.setWorkingDir(argv.workingdir);
+    console.log(chalk.green('Config dir override:'), state.workingDir);
+  } catch {
+    console.log(chalk.red('Invalid working directory provided, defaulting to:'), state.workingDir)
+  }
 }
 
 if (argv.debug) {

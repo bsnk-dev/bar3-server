@@ -24,3 +24,7 @@ Run the debugging logs
 Run without opening the browser
 
     --headless
+    
+Run on a different port than 8055
+
+    --port [port]

@@ -17,6 +17,10 @@ To run these you will need node installed.
 
 # Flags
 
+View the generated flag help
+    
+    --help
+
 Run the debugging logs
 
     --debug
@@ -28,3 +32,8 @@ Run without opening the browser
 Run on a different port than 8055
 
     --port [port]
+    
+Run on a different port than 8055
+
+    --workingdir [relative path]
+

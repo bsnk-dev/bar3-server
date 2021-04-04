@@ -1,11 +1,9 @@
 import {Config, NationAPICall} from '../interfaces/types';
-import {readFileSync, writeFileSync} from 'fs';
-import {join} from 'path';
+import {readFileSync, writeFileSync, statSync} from 'fs';
+import {join, resolve} from 'path';
 
 const packageRaw = readFileSync(join(__dirname, '../../..', './package.json'));
 const packageJson = JSON.parse(packageRaw.toString());
-
-const cwd = process.cwd();
 
 /**
  * Handles the state across Bar 3
@@ -20,12 +18,13 @@ class StateHandler {
   public debug = false;
   public headless = false;
   public port = 8055;
+  public workingDir = process.cwd();
   public serverVersion = packageJson.version;
 
   /**
-   * Loads the config
+   * Loads the config and state (to be called during initial startup)
    */
-  constructor() {
+  initState() {
     this.loadConfig();
     this.loadApplicationState();
   }
@@ -37,7 +36,7 @@ class StateHandler {
   writeConfig(config: Config) {
     this.config = config;
     try {
-      writeFileSync(join(cwd, './config.json'), JSON.stringify(config));
+      writeFileSync(join(this.workingDir, './config.json'), JSON.stringify(config));
       this.isSetup = true;
     } catch {
       console.error('Can\'t write config!');
@@ -49,7 +48,7 @@ class StateHandler {
    */
   writeApplicationState() {
     try {
-      writeFileSync(join(cwd, './state.json'), JSON.stringify({
+      writeFileSync(join(this.workingDir, './state.json'), JSON.stringify({
         isApplicationOn: this.isApplicationOn,
       }));
     } catch {
@@ -62,7 +61,7 @@ class StateHandler {
    */
   loadApplicationState() {
     try {
-      const rawConfig = readFileSync(join(cwd, './state.json')).toString();
+      const rawConfig = readFileSync(join(this.workingDir, './state.json')).toString();
       this.isApplicationOn = JSON.parse(rawConfig).isApplicationOn;
     } catch {
       console.error('Can\'t load state!');
@@ -74,7 +73,7 @@ class StateHandler {
    */
   private loadConfig() {
     try {
-      const rawConfig = readFileSync(join(cwd, './config.json')).toString();
+      const rawConfig = readFileSync(join(this.workingDir, './config.json')).toString();
       this.config = JSON.parse(rawConfig);
       this.isSetup = true;
     } catch {
@@ -138,6 +137,22 @@ class StateHandler {
    */
   setPort(port: number) {
     this.port = port;
+  }
+
+  /**
+   * Sets the working directory
+   * @param {string} dir The working directory to change to (supports relative paths)
+   * @throws Error will be thrown if path doesn't exist or is not a directory
+   */
+  setWorkingDir(dir: string) {
+    let newWorkingDir = resolve(process.cwd(), dir);
+
+    // statSync throws error if invalid path; we throw error if path is not a directory
+    if (statSync(newWorkingDir).isDirectory()) {
+      this.workingDir = newWorkingDir;
+    } else {
+      throw new Error('Not a directory');
+    }
   }
 }
 

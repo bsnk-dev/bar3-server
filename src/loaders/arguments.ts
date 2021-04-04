@@ -30,7 +30,7 @@ if (argv.workingdir) {
     state.setWorkingDir(argv.workingdir);
     console.log(chalk.green('Config dir override:'), state.workingDir);
   } catch {
-    console.log(chalk.red('Invalid working directory provided, defaulting to:'), state.workingDir)
+    console.log(chalk.red('Invalid working directory provided, defaulting to:'), state.workingDir);
   }
 }
 

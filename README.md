@@ -33,7 +33,7 @@ Run on a different port than 8055
 
     --port [port]
     
-Run on a different port than 8055
+Change the location of the files stored by Bar 3
 
     --workingdir [relative path]
 

@@ -17,6 +17,7 @@
   "author": "bsnk-dev",
   "license": "MIT",
   "dependencies": {
+    "celebrate": "^14.0.0",
     "chalk": "^4.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",

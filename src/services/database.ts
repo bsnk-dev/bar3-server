@@ -1,5 +1,6 @@
 import Datastore from 'nedb';
 import {CampaignAnalytics} from '../interfaces/analytics';
+import debugLog from '../utilities/debugLog';
 
 /**
  * Manages anything to do with saving data to databases
@@ -17,6 +18,8 @@ class DatabaseService {
       autoload: true,
       onload: () => this.analyticsDBLoaded = true,
     });
+
+    debugLog('loading databases.');
   }
 
   /**
@@ -25,6 +28,8 @@ class DatabaseService {
    * @param {string} name The name of the campaign
    */
   async saveCampaignAnalytics(analytics: CampaignAnalytics, name: string): Promise<undefined> {
+    debugLog(`saving campaign analytics for ${name}`);
+
     return await new Promise((resolve, reject) => {
       this.analyticsDB.update({name: name}, analytics, {upsert: true}, (err) => {
         if (err) {
@@ -60,6 +65,14 @@ class DatabaseService {
         resolve(docs[0] || null);
       });
     });
+  }
+
+  /**
+   * Returns all stored campaigns
+   * @return {CampaignAnalytics[]} Each of the campaigns
+   */
+  getAllCampaigns(): CampaignAnalytics[] {
+    return this.analyticsDB.getAllData();
   }
 }
 

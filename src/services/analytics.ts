@@ -1,5 +1,6 @@
 import superagent from 'superagent';
 import {CampaignAnalytics, CreatedTrackingObject, Link, TrackingAnalytics} from '../interfaces/analytics';
+import debugLog from '../utilities/debugLog';
 import database from './database';
 
 /**
@@ -13,10 +14,14 @@ class AnalyticsService {
    * @return {CreatedTrackingObject}
    */
   async createPixel(): Promise<CreatedTrackingObject | null> {
+    debugLog(`creating new tracking pixel`);
+
     const pixel = await superagent
         .post(`${this.analyticsURL}/createPixel`)
         .accept('json')
         .then();
+
+    debugLog(`finished`);
 
     return pixel?.body || null;
   }
@@ -27,6 +32,8 @@ class AnalyticsService {
    * @return {CreatedTrackingObject}
    */
   async createLink(url: string): Promise<CreatedTrackingObject | null> {
+    debugLog(`creating new trackable link`);
+
     const link = await superagent
         .post(`${this.analyticsURL}/createLink`)
         .send({
@@ -34,6 +41,8 @@ class AnalyticsService {
         })
         .type('json')
         .then();
+
+    debugLog(`finished`);
 
     return link?.body || null;
   }
@@ -46,6 +55,8 @@ class AnalyticsService {
    * @return {TrackingAnalytics}
    */
   async getAnalytics(type: 'pixel' | 'link', id: string, auth: string): Promise<TrackingAnalytics | null> {
+    debugLog(`retrieving analytics for ${type} ${id}`);
+
     const analytics = await superagent
         .get(`${this.analyticsURL}/a`)
         .query({
@@ -55,6 +66,8 @@ class AnalyticsService {
         })
         .type('json')
         .then();
+
+    debugLog(`finished`);
 
     return analytics?.body || null;
   }
@@ -108,6 +121,8 @@ class AnalyticsService {
    * @param {string} name The name of the campaign
    */
   async newCampaign(name: string): Promise<CampaignAnalytics> {
+    debugLog(`creating new analytics campaign: ${name}`);
+
     const newMessagePixel = await this.createPixel();
     if (!newMessagePixel) throw new Error('Can\'t create new message pixel!');
 
@@ -134,6 +149,8 @@ class AnalyticsService {
    * @return {Promise<void>}
    */
   async updateAnalyticsInCampaign(name?: string): Promise<void> {
+    debugLog(`retrieving analytics for tracking campaign ${name}`);
+
     let campaign;
 
     (name) ?

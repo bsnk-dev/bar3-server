@@ -70,4 +70,7 @@ app.get('*', async function(req: express.Request, res: express.Response) {
   res.sendFile(join(__dirname, '../../..', 'public/index.html'));
 });
 
+import analyticsRouter from './routers/analytics';
+app.use('/analytics', analyticsRouter);
+
 app.listen(state.port);

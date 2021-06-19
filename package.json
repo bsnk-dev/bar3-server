@@ -6,7 +6,7 @@
   "bin": "./build/src/index.js",
   "scripts": {
     "start": "node ./build/src/index.js",
-    "dev": "nodemon ./build/src/index.js",
+    "dev": "nodemon ./build/src/index.js --debug",
     "verbose": "node ./build/src/index.js --debug",
     "prebuild": "shx rm -rf ./build/*",
     "build": "tsc",

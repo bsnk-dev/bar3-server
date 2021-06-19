@@ -14,8 +14,6 @@ router.get('/campaigns', async (req: Request, res: Response) => {
 
   await analytics.updateAnalyticsInCampaign().catch((e) => {
     logs.logError(`Cannot update latest campaign, ${e}`);
-    res.status(500).end();
-    return;
   });
 
   const campaigns = database.getAllCampaigns();

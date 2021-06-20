@@ -48,6 +48,27 @@ class AnalyticsService {
   }
 
   /**
+   * Adds a sent message to the count
+   * @param {string?} campaignName The of the campaign, leave blank to get the latest one
+   * @return {Promise<void>}
+   */
+  async incrementSendMessageCount(campaignName?: string) {
+    debugLog(`incrementing sent count for tracking campaign ${campaignName}`);
+
+    let campaign;
+
+    (campaignName) ?
+      campaign = await database.getCampaignAnalytics(campaignName) :
+      campaign = await database.getLatestCampaign();
+
+    if (!campaign) throw new Error('Can\'t get campaign to increment');
+
+    campaign.sentCount++;
+
+    await database.saveCampaignAnalytics(campaign, campaign.name);
+  }
+
+  /**
    * Gets analytics about a particular tracking object
    * @param {'pixel' | 'link'} type The type of the tracking object
    * @param {string} id The UID of the tracking object
@@ -170,6 +191,10 @@ class AnalyticsService {
 
     campaign.messagePixel.readCount = pixelAnalytics?.readCount || 0;
     campaign.messagePixel.readHistory = pixelAnalytics?.readTimeHistory || [];
+
+    await database.saveCampaignAnalytics(campaign, campaign.name).catch(() => {
+      throw new Error('Can\'t save campaign information.');
+    });
   }
 }
 

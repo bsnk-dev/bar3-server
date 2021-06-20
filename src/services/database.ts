@@ -60,7 +60,7 @@ class DatabaseService {
    */
   async getLatestCampaign(): Promise<CampaignAnalytics | null> {
     return await new Promise((resolve, reject) => {
-      this.analyticsDB.find({}).sort({createdTime: 1}).limit(1).exec((err, docs) => {
+      this.analyticsDB.find({}).sort({createdTime: -1}).limit(1).exec((err, docs) => {
         if (err) reject(err);
         resolve(docs[0] || null);
       });
@@ -72,7 +72,7 @@ class DatabaseService {
    * @return {CampaignAnalytics[]} Each of the campaigns
    */
   getAllCampaigns(): CampaignAnalytics[] {
-    return this.analyticsDB.getAllData();
+    return this.analyticsDB.getAllData().sort((a, b) => a.createdTime - b.createdTime);
   }
 }
 

@@ -7,6 +7,7 @@ export interface Config {
     html: string;
     css: string
   };
+  analyticsEnabled: boolean;
   updatePeriodMilliseconds: number;
   queueTime: number;
   currentEditor: number;
@@ -21,10 +22,11 @@ export class Config implements Config {
     html: '',
     css: '',
   };
+  analyticsEnabled = false;
   updatePeriodMilliseconds = 180000;
   queueTime = 300000;
   currentEditor = 0;
-  configVersion = 'v1.0'; 
+  configVersion = 'v1.1'; 
 }
 
 export interface Message {

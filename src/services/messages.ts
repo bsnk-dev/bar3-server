@@ -168,14 +168,14 @@ class Messages {
   /**
    * Clears the internal queue of nations
    */
-  public clearQueue() {
+  public async clearQueue() {
     dLog('Clearing the queue.');
 
     const usedNationIndexes: number[] = [];
 
     for (let i = 0; i < this.queuedNations.length; i++) {
       if (this.queuedNations[i].timeQueued + configHandler.config.queueTime < Date.now()) {
-        this.sendMessage(Object.assign({}, this.queuedNations[i].nation));
+        await this.sendMessage(Object.assign({}, this.queuedNations[i].nation));
         usedNationIndexes.push(i);
       }
     }

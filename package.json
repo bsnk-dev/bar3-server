@@ -10,7 +10,7 @@
     "verbose": "node ./build/src/index.js --debug",
     "prebuild": "shx rm -rf ./build/*",
     "build": "tsc",
-    "pack": "npm run build && pkg . --target node12-win-x86,node12-linux",
+    "pack": "npm run build && pkg . --target node12-win-x86,node12-linux,node12-macos-x64",
     "postpack": "shx mkdir -p dist && shx mv bar3-server-* dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

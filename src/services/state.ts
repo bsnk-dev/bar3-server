@@ -145,7 +145,7 @@ class StateHandler {
    * @throws Error will be thrown if path doesn't exist or is not a directory
    */
   setWorkingDir(dir: string) {
-    let newWorkingDir = resolve(process.cwd(), dir);
+    const newWorkingDir = resolve(process.cwd(), dir);
 
     // statSync throws error if invalid path; we throw error if path is not a directory
     if (statSync(newWorkingDir).isDirectory()) {

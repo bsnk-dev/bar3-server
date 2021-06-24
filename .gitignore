@@ -10,3 +10,9 @@ dist
 #Runtime files
 config.json
 state.json
+
+# databases
+*.db
+
+#built web files
+public/

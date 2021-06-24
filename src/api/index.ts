@@ -8,7 +8,7 @@ import {join} from 'path';
 const app = express();
 
 app.use(cors());
-app.use(express.json({limit: '2mb'}));
+app.use(express.json({limit: '5mb'}));
 app.use(express.static(join(__dirname, '../../..', 'public')));
 
 app.get('/api/config', async function(req: express.Request, res: express.Response) {
@@ -64,6 +64,9 @@ app.get('/api/appData', async function(req: express.Request, res: express.Respon
 
   dLog('Sending application data for dashboard');
 });
+
+import analyticsRouter from './routers/analytics';
+app.use('/analytics', analyticsRouter);
 
 // Catch the 404s for the single page structure
 app.get('*', async function(req: express.Request, res: express.Response) {

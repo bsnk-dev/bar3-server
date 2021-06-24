@@ -2,6 +2,9 @@ import {Message, NationAPICall, QueuedNation} from '../interfaces/types';
 import configHandler from './state';
 import SuperAgent from 'superagent';
 import dLog from '../utilities/debugLog';
+import {parse} from 'node-html-parser';
+import analytics from './analytics';
+import debugLog from '../utilities/debugLog';
 
 /**
  * Sends, stores, and queues messages.
@@ -13,6 +16,20 @@ class Messages {
   private queuedNations: QueuedNation[] = [];
 
   /**
+   * Returns the hash of a string
+   * @param {string} str The string to hash
+   * @return {number} The hash of the string
+   */
+  private hashString(str: string) {
+    let hash = 0;
+    for (let i = 0; i < str.length; ++i) {
+      hash = (Math.imul(31, hash) + str.charCodeAt(i));
+    }
+
+    return Math.abs(hash) | 0;
+  }
+
+  /**
    * Sends a message to a nation using your current config
    * @param {NationAPICall.Nation} nation The nation that you want to send the message to
    */
@@ -21,11 +38,24 @@ class Messages {
 
     dLog(`sending message to ${nation.nation}`);
 
-    const messageHTML = this.customizeMessage(config.messageHTML, nation);
+    let messageHTML = this.customizeMessage(config.messageHTML, nation);
     const subject = this.customizeMessage(config.messageSubject, nation);
 
     dLog('Customizing message', `Old: ${config.messageHTML}`, `New: ${messageHTML}`);
     dLog('Customizing subject', `Old: ${config.messageSubject}`, `New: ${subject}`);
+
+    if (config.analyticsEnabled) {
+      await analytics.incrementSendMessageCount().catch((e) => {
+        dLog(`Can\'t increment sent count for analytics campaign, ${e}`);
+      });
+
+      dLog(`embeding pixel tracker and replacing links with tracking links...`);
+
+      const trackedMessage = await this.addTracking(messageHTML, this.hashString(nation.leader).toString()).catch();
+      if (trackedMessage) messageHTML = trackedMessage;
+    }
+
+    dLog(`Finished adding tracking for analytics`);
 
     const thisMessage = new Message();
 
@@ -79,6 +109,49 @@ class Messages {
   }
 
   /**
+   * Embeds the analytics tracking pixel and replaces links with tracked ones
+   * @param {string} messageHTML The input message before tracking
+   * @param {string} user A user idenitfier to track with
+   * @return {Promise<string>} The trackable message html
+   */
+  private async addTracking(messageHTML: string, user?: string): Promise<string> {
+    const parsedMessage = parse(messageHTML);
+
+    const allLinks = parsedMessage.querySelectorAll('a');
+
+    for (const link of allLinks) {
+      if (link.hasAttribute('href')) {
+        const beforeLink = link.getAttribute('href');
+        if (!beforeLink) continue;
+
+        const trackedLink = await analytics.urlToShortLink(beforeLink, user).catch();
+        if (!trackedLink) {
+          debugLog(`Failed to get tracked link for ${beforeLink}`);
+        }
+
+        debugLog(`retrieved tracking link for ${beforeLink}, new url: ${trackedLink}`);
+
+        link.setAttribute('href', trackedLink);
+      }
+    }
+
+    debugLog(`finished replacing links in message, adding pixel.`);
+
+    const messageWithTrackingLinks = parsedMessage.toString();
+    const pixel = await analytics.getPixelLink(user).catch();
+
+    if (!pixel) {
+      debugLog(`Failed to retrieve tracking pixel`);
+    }
+
+    debugLog(`retrieved pixel link: ${pixel}`);
+
+    const completedMessage = messageWithTrackingLinks + `<img src="${pixel}"/>`;
+
+    return completedMessage;
+  }
+
+  /**
    * Adds a message to the list of sent messages
    * @param {Message} message The sent message object
    */
@@ -95,14 +168,14 @@ class Messages {
   /**
    * Clears the internal queue of nations
    */
-  public clearQueue() {
+  public async clearQueue() {
     dLog('Clearing the queue.');
 
     const usedNationIndexes: number[] = [];
 
     for (let i = 0; i < this.queuedNations.length; i++) {
       if (this.queuedNations[i].timeQueued + configHandler.config.queueTime < Date.now()) {
-        this.sendMessage(Object.assign({}, this.queuedNations[i].nation));
+        await this.sendMessage(Object.assign({}, this.queuedNations[i].nation));
         usedNationIndexes.push(i);
       }
     }
